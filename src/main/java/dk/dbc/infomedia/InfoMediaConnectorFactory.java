@@ -40,11 +40,11 @@ public class InfoMediaConnectorFactory {
     private TimingLogLevel level;
 
     @Inject
-    @ConfigProperty(name = "INFOMEDIA_USERNAME", defaultValue = "not set")
+    @ConfigProperty(name = "INFOMEDIA_USERNAME")
     private String username;
 
     @Inject
-    @ConfigProperty(name = "INFOMEDIA_PASSWORD", defaultValue = "not set")
+    @ConfigProperty(name = "INFOMEDIA_PASSWORD")
     private String password;
 
     InfoMediaConnector connector;
