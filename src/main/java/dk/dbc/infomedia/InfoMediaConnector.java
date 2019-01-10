@@ -46,6 +46,8 @@ public class InfoMediaConnector {
      *
      * @param httpClient web resources client
      * @param baseUrl    base URL for infomedia api endpoint
+     * @param username   the username for the infomedia service
+     * @param password   the password for the infomedia service
      */
     public InfoMediaConnector(Client httpClient, String baseUrl, String username, String password) {
         this(FailSafeHttpClient.create(httpClient, RETRY_POLICY), baseUrl, TimingLogLevel.INFO, username, password);
@@ -56,9 +58,11 @@ public class InfoMediaConnector {
      *
      * @param httpClient web resources client
      * @param baseUrl    base URL for infomedia api endpoint
-     * @param level
+     * @param level      log level
+     * @param username   the username for the infomedia service
+     * @param password   the password for the infomedia service
      */
-    public InfoMediaConnector(Client httpClient, String baseUrl, TimingLogLevel level, String username, String password)  {
+    public InfoMediaConnector(Client httpClient, String baseUrl, TimingLogLevel level, String username, String password) {
         this(FailSafeHttpClient.create(httpClient, RETRY_POLICY), baseUrl, level, username, password);
     }
 
@@ -67,8 +71,10 @@ public class InfoMediaConnector {
      *
      * @param failSafeHttpClient web resources client with custom retry policy
      * @param baseUrl            base URL for infomedia api endpoint
+     * @param username           the username for the infomedia service
+     * @param password           the password for the infomedia service
      */
-    public InfoMediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, String username, String password)  {
+    public InfoMediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, String username, String password) {
         this(failSafeHttpClient, baseUrl, TimingLogLevel.INFO, username, password);
     }
 
@@ -77,9 +83,11 @@ public class InfoMediaConnector {
      *
      * @param failSafeHttpClient web resources client with custom retry policy
      * @param baseUrl            base URL for infomedia api endpoint
-     * @param level
+     * @param level              log level
+     * @param username           the username for the infomedia service
+     * @param password           the password for the infomedia service
      */
-    public InfoMediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, TimingLogLevel level, String username, String password)  {
+    public InfoMediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, TimingLogLevel level, String username, String password) {
         this.failSafeHttpClient = InvariantUtil.checkNotNullOrThrow(
                 failSafeHttpClient, "failSafeHttpClient");
         this.baseUrl = InvariantUtil.checkNotNullNotEmptyOrThrow(
