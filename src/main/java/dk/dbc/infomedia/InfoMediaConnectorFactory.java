@@ -1,7 +1,7 @@
 package dk.dbc.infomedia;
 
-import dk.dbc.infomedia.InfoMediaConnector.TimingLogLevel;
 import dk.dbc.httpclient.HttpClient;
+import dk.dbc.infomedia.InfoMediaConnector.TimingLogLevel;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
@@ -19,13 +19,13 @@ import javax.ws.rs.client.Client;
 public class InfoMediaConnectorFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(InfoMediaConnectorFactory.class);
 
-    public static InfoMediaConnector create(String recordServiceBaseUrl, String username, String password) throws InfoMediaConnectorException{
+    public static InfoMediaConnector create(String recordServiceBaseUrl, String username, String password) {
         final Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
         LOGGER.info("Creating RecordServiceConnector for: {}", recordServiceBaseUrl);
         return new InfoMediaConnector(client, recordServiceBaseUrl, username, password);
     }
 
-    public static InfoMediaConnector create(String recordServiceBaseUrl, InfoMediaConnector.TimingLogLevel level, String username, String password) throws InfoMediaConnectorException{
+    public static InfoMediaConnector create(String recordServiceBaseUrl, InfoMediaConnector.TimingLogLevel level, String username, String password) {
         final Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
         LOGGER.info("Creating RecordServiceConnector for: {}", recordServiceBaseUrl);
         return new InfoMediaConnector(client, recordServiceBaseUrl, level, username, password);
@@ -50,7 +50,7 @@ public class InfoMediaConnectorFactory {
     InfoMediaConnector connector;
 
     @PostConstruct
-    public void initializeConnector() throws InfoMediaConnectorException{
+    public void initializeConnector() {
         connector = InfoMediaConnectorFactory.create(infoMediaBaseUrl, level, username, password);
     }
 
