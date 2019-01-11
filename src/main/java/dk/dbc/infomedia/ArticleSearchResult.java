@@ -16,7 +16,7 @@ public class ArticleSearchResult {
     private List<Article> articles;
 
     @JsonProperty("NumFound")
-    private int count;
+    private int numFound;
 
     @JsonProperty("PagingInfo")
     private String pagingInfo;
@@ -32,12 +32,12 @@ public class ArticleSearchResult {
         this.articles = articles;
     }
 
-    public int getCount() {
-        return count;
+    public int getNumFound() {
+        return numFound;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setNumFound(int numFound) {
+        this.numFound = numFound;
     }
 
     public String getPagingInfo() {
