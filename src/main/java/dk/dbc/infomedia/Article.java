@@ -159,4 +159,24 @@ public class Article {
     public void setLead(String lead) {
         this.lead = lead;
     }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+                "heading='" + heading + '\'' +
+                ", subHeading='" + subHeading + '\'' +
+                ", bodyText='" + bodyText + '\'' +
+                ", pageIds=" + pageIds +
+                ", publishDate='" + publishDate + '\'' +
+                ", authors=" + authors +
+                ", captions=" + captions +
+                ", articleUrl='" + articleUrl + '\'' +
+                ", paragraph='" + paragraph + '\'' +
+                ", source='" + source + '\'' +
+                ", wordCount=" + wordCount +
+                ", articleId='" + articleId + '\'' +
+                ", section=" + section +
+                ", lead='" + lead + '\'' +
+                '}';
+    }
 }
