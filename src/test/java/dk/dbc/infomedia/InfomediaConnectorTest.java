@@ -15,14 +15,14 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class InfoMediaConnectorTest {
+public class InfomediaConnectorTest {
 
     private static WireMockServer wireMockServer;
     private static String wireMockHost;
 
     final static Client CLIENT = HttpClient.newClient(new ClientConfig()
             .register(new JacksonFeature()));
-    static InfoMediaConnector connector;
+    static InfomediaConnector connector;
 
     @BeforeAll
     static void startWireMockServer() {
@@ -35,7 +35,7 @@ public class InfoMediaConnectorTest {
 
     @BeforeAll
     static void setConnector() {
-        connector = new InfoMediaConnector(CLIENT, wireMockHost, InfoMediaConnector.TimingLogLevel.INFO, "username", "password");
+        connector = new InfomediaConnector(CLIENT, wireMockHost, InfomediaConnector.TimingLogLevel.INFO, "username", "password");
     }
 
     @AfterAll
@@ -44,7 +44,7 @@ public class InfoMediaConnectorTest {
     }
 
     @Test
-    void dummy() throws InfoMediaConnectorException {
+    void dummy() throws InfomediaConnectorException {
         assertThat(true, is(true));
     }
 }

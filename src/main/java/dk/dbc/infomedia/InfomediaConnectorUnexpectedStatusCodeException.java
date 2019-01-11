@@ -5,7 +5,7 @@
 
 package dk.dbc.infomedia;
 
-public class InfoMediaConnectorUnexpectedStatusCodeException extends InfoMediaConnectorException {
+public class InfomediaConnectorUnexpectedStatusCodeException extends InfomediaConnectorException {
     private final int statusCode;
 
     /**
@@ -19,7 +19,7 @@ public class InfoMediaConnectorUnexpectedStatusCodeException extends InfoMediaCo
      *
      * @param statusCode the http status code returned by the REST service
      */
-    public InfoMediaConnectorUnexpectedStatusCodeException(String message, int statusCode) {
+    public InfomediaConnectorUnexpectedStatusCodeException(String message, int statusCode) {
         super(message);
         this.statusCode = statusCode;
     }
