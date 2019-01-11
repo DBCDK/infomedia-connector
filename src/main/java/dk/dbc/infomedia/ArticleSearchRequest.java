@@ -2,8 +2,6 @@ package dk.dbc.infomedia;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.Instant;
-
 public class ArticleSearchRequest {
 
     @JsonProperty("IqlQuery")

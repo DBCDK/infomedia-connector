@@ -40,7 +40,7 @@ public class AuthToken {
     @Override
     public String toString() {
         return "AuthToken{" +
-                "accessToken='" + accessToken.substring(0,10) + "........\'" +
+                "accessToken='" + accessToken.substring(0, 10) + "........\'" +
                 ", tokenType='" + tokenType + '\'' +
                 ", expiresIn=" + expiresIn +
                 '}';
