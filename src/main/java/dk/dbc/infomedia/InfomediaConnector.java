@@ -8,6 +8,7 @@ package dk.dbc.infomedia;
 import dk.dbc.httpclient.FailSafeHttpClient;
 import dk.dbc.httpclient.HttpPost;
 import dk.dbc.invariant.InvariantUtil;
+import dk.dbc.util.Stopwatch;
 import net.jodah.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -139,17 +140,25 @@ public class InfomediaConnector {
     private void authenticate() throws InfomediaConnectorException {
         synchronized (this) {
             if (!authTokenIsValid()) {
-                logger.log("Token expired - getting new one");
-                final String data = String.format("grant_type=password&username=%s&password=%s", username, password);
-                final HttpPost httpPost = new HttpPost(failSafeHttpClient)
-                        .withBaseUrl(baseUrl)
-                        .withPathElements(URL_OAUTH_TOKEN)
-                        .withData(data, MediaType.TEXT_PLAIN);
-                final Response response = httpPost.execute();
-                assertResponseStatus(response, Response.Status.OK);
-                AuthToken auth = readResponseEntity(response, AuthToken.class);
+                final Stopwatch stopwatch = new Stopwatch();
+                try {
+                    logger.log("Token expired - getting new one");
+                    final String data = String.format("grant_type=password&username=%s&password=%s", username, password);
+                    final HttpPost httpPost = new HttpPost(failSafeHttpClient)
+                            .withBaseUrl(baseUrl)
+                            .withPathElements(URL_OAUTH_TOKEN)
+                            .withData(data, MediaType.TEXT_PLAIN);
 
-                updateAuthToken(auth);
+
+                    final Response response = httpPost.execute();
+                    assertResponseStatus(response, Response.Status.OK);
+                    AuthToken auth = readResponseEntity(response, AuthToken.class);
+
+                    updateAuthToken(auth);
+                } finally {
+                    logger.log("POST {} took {} milliseconds", URL_OAUTH_TOKEN,
+                            stopwatch.getElapsedTime(TimeUnit.MILLISECONDS));
+                }
             }
         }
     }
@@ -193,16 +202,22 @@ public class InfomediaConnector {
     private <S, T> T postRequest(String path, S data, Class<T> returnType) throws InfomediaConnectorException {
         authenticate(); // Make sure we have a token
         logger.log("POST {} with data {}", path, data);
-        final HttpPost httpPost = new HttpPost(failSafeHttpClient)
-                .withBaseUrl(baseUrl)
-                .withPathElements(path)
-                .withJsonData(data)
-                .withHeader("Accept", "application/json")
-                .withHeader("Content-type", "application/json")
-                .withHeader("Authorization", "bearer " + this.bearerToken);
-        final Response response = httpPost.execute();
-        assertResponseStatus(response, Response.Status.OK);
-        return readResponseEntity(response, returnType);
+        final Stopwatch stopwatch = new Stopwatch();
+        try {
+            final HttpPost httpPost = new HttpPost(failSafeHttpClient)
+                    .withBaseUrl(baseUrl)
+                    .withPathElements(path)
+                    .withJsonData(data)
+                    .withHeader("Accept", "application/json")
+                    .withHeader("Content-type", "application/json")
+                    .withHeader("Authorization", "bearer " + this.bearerToken);
+            final Response response = httpPost.execute();
+            assertResponseStatus(response, Response.Status.OK);
+            return readResponseEntity(response, returnType);
+        } finally {
+            logger.log("POST {} took {} milliseconds", path,
+                    stopwatch.getElapsedTime(TimeUnit.MILLISECONDS));
+        }
     }
 
     private <T> T readResponseEntity(Response response, Class<T> type)
