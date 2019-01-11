@@ -30,7 +30,7 @@ public class InfomediaConnectorFactory {
         return new InfomediaConnector(client, recordServiceBaseUrl, username, password);
     }
 
-    public static InfomediaConnector create(String recordServiceBaseUrl, InfomediaConnector.TimingLogLevel level, String username, String password) {
+    public static InfomediaConnector create(String recordServiceBaseUrl, TimingLogLevel level, String username, String password) {
         final Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
         LOGGER.info("Creating InfomediaConnector for: {}", recordServiceBaseUrl);
         return new InfomediaConnector(client, recordServiceBaseUrl, level, username, password);
@@ -40,10 +40,9 @@ public class InfomediaConnectorFactory {
     @ConfigProperty(name = "INFOMEDIA_URL")
     private String infomediaBaseUrl;
 
-    // TODO Implement log level injection
-//    @Inject
-//    @ConfigProperty(name = "INFOMEDIA_TIMING_LOG_LEVEL", defaultValue = "INFO")
-//    private TimingLogLevel level;
+    @Inject
+    @ConfigProperty(name = "INFOMEDIA_TIMING_LOG_LEVEL", defaultValue = "INFO")
+    private String level;
 
     @Inject
     @ConfigProperty(name = "INFOMEDIA_USERNAME")
@@ -57,7 +56,7 @@ public class InfomediaConnectorFactory {
 
     @PostConstruct
     public void initializeConnector() {
-        connector = InfomediaConnectorFactory.create(infomediaBaseUrl, TimingLogLevel.INFO, username, password);
+        connector = InfomediaConnectorFactory.create(infomediaBaseUrl, TimingLogLevel.valueOf(level), username, password);
     }
 
     @Produces
