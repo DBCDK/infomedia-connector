@@ -11,19 +11,22 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Calendar;
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class InfoMediaConnector {
-    private static final Logger LOGGER = LoggerFactory.getLogger(InfoMediaConnector.class);
+public class InfomediaConnector {
+    private static final Logger LOGGER = LoggerFactory.getLogger(InfomediaConnector.class);
 
     public enum TimingLogLevel {
         TRACE, DEBUG, INFO, WARN, ERROR
     }
 
     private static final String URL_OAUTH_TOKEN = "/oauth/token";
-    private static final String URL_INFOMEDIA_FETCH = "/api/articles/fetch";
+    private static final String URL_INFOMEDIA_SEARCH = "/api/v1/article/search";
+    private static final String URL_INFOMEDIA_FETCH = "/api/v1/article/fetch";
     private static final RetryPolicy RETRY_POLICY = new RetryPolicy()
             .retryOn(Collections.singletonList(ProcessingException.class))
             .retryIf((Response response) -> response.getStatus() == 404
@@ -38,8 +41,9 @@ public class InfoMediaConnector {
     private final String password;
     private final LogLevelMethod logger;
 
-    private Calendar tokenExpiryDate;
+    private Instant tokenExpiryDate = Instant.now();
     private String bearerToken;
+    private int pageSize = 300;
 
     /**
      * Returns new instance with default retry policy
@@ -49,7 +53,7 @@ public class InfoMediaConnector {
      * @param username   the username for the infomedia service
      * @param password   the password for the infomedia service
      */
-    public InfoMediaConnector(Client httpClient, String baseUrl, String username, String password) {
+    public InfomediaConnector(Client httpClient, String baseUrl, String username, String password) {
         this(FailSafeHttpClient.create(httpClient, RETRY_POLICY), baseUrl, TimingLogLevel.INFO, username, password);
     }
 
@@ -62,7 +66,7 @@ public class InfoMediaConnector {
      * @param username   the username for the infomedia service
      * @param password   the password for the infomedia service
      */
-    public InfoMediaConnector(Client httpClient, String baseUrl, TimingLogLevel level, String username, String password) {
+    public InfomediaConnector(Client httpClient, String baseUrl, TimingLogLevel level, String username, String password) {
         this(FailSafeHttpClient.create(httpClient, RETRY_POLICY), baseUrl, level, username, password);
     }
 
@@ -74,7 +78,7 @@ public class InfoMediaConnector {
      * @param username           the username for the infomedia service
      * @param password           the password for the infomedia service
      */
-    public InfoMediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, String username, String password) {
+    public InfomediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, String username, String password) {
         this(failSafeHttpClient, baseUrl, TimingLogLevel.INFO, username, password);
     }
 
@@ -87,15 +91,11 @@ public class InfoMediaConnector {
      * @param username           the username for the infomedia service
      * @param password           the password for the infomedia service
      */
-    public InfoMediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, TimingLogLevel level, String username, String password) {
-        this.failSafeHttpClient = InvariantUtil.checkNotNullOrThrow(
-                failSafeHttpClient, "failSafeHttpClient");
-        this.baseUrl = InvariantUtil.checkNotNullNotEmptyOrThrow(
-                baseUrl, "baseUrl");
-        this.username = InvariantUtil.checkNotNullOrThrow(
-                username, "username");
-        this.password = InvariantUtil.checkNotNullOrThrow(
-                password, "password");
+    public InfomediaConnector(FailSafeHttpClient failSafeHttpClient, String baseUrl, TimingLogLevel level, String username, String password) {
+        this.failSafeHttpClient = InvariantUtil.checkNotNullOrThrow(failSafeHttpClient, "failSafeHttpClient");
+        this.baseUrl = InvariantUtil.checkNotNullNotEmptyOrThrow(baseUrl, "baseUrl");
+        this.username = InvariantUtil.checkNotNullOrThrow(username, "username");
+        this.password = InvariantUtil.checkNotNullOrThrow(password, "password");
         switch (level) {
             case TRACE:
                 logger = LOGGER::trace;
@@ -118,21 +118,28 @@ public class InfoMediaConnector {
         }
     }
 
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
     /**
      * This function is responsible for keeping the bearer token up to date
      *
-     * @throws InfoMediaConnectorException
+     * @throws InfomediaConnectorException
      */
-    private void authenticate() throws InfoMediaConnectorException {
+    private void authenticate() throws InfomediaConnectorException {
         synchronized (this) {
             if (!authTokenIsValid()) {
-                final String data = "grant_type=password&username=" + username + "&password=" + password;
+                logger.log("Token expired - getting new one");
+                final String data = String.format("grant_type=password&username=%s&password=%s", username, password);
                 final HttpPost httpPost = new HttpPost(failSafeHttpClient)
                         .withBaseUrl(baseUrl)
                         .withPathElements(URL_OAUTH_TOKEN)
-                        .withData(data, MediaType.APPLICATION_JSON)
-                        .withHeader("Content-type", "application/x-www-form-urlencoded");
-
+                        .withData(data, MediaType.TEXT_PLAIN);
                 final Response response = httpPost.execute();
                 assertResponseStatus(response, Response.Status.OK);
                 AuthToken auth = readResponseEntity(response, AuthToken.class);
@@ -144,27 +151,60 @@ public class InfoMediaConnector {
 
     private void updateAuthToken(AuthToken authToken) {
         this.bearerToken = authToken.getAccessToken();
-        this.tokenExpiryDate.add(Calendar.SECOND, authToken.getExpiresIn());
+        this.tokenExpiryDate = Instant.now().plusSeconds(authToken.getExpiresIn());
+        logger.log("Bearer token renewed. New expire time is {}", this.tokenExpiryDate.toString());
     }
 
     private boolean authTokenIsValid() {
-        // No auth token has been retrieved before
-        if (this.tokenExpiryDate == null) {
-            return false;
-        }
-
-        return Calendar.getInstance().before(this.tokenExpiryDate);
+        return Instant.now().compareTo(this.tokenExpiryDate) < 0;
     }
 
     public void close() {
         failSafeHttpClient.getClient().close();
     }
 
+
+    // TODO Implement pagination
+    public List<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, String source) throws InfomediaConnectorException {
+        final List<String> result = new ArrayList<>();
+        ArticleSearchRequest body = new ArticleSearchRequest();
+        body.setIqlQuery(String.format("sourcecode:%s AND publishdate:%s", source, publishDate.toString()));
+        body.setSearchRange(new SearchRange(fromDate, toDate));
+        body.setPagingParameter(new PagingParameter(0, this.pageSize));
+        ArticleSearchResult reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
+
+        result.addAll(reply.getArticleIds());
+        logger.log("Found {} articles", result.size());
+
+        return result;
+    }
+
+    public ArticleList getArticles(List<String> articleIds) throws InfomediaConnectorException {
+        final String body = "[\"" + String.join("\",\"", articleIds) + "\"]";
+
+        return postRequest(URL_INFOMEDIA_FETCH, body, ArticleList.class);
+    }
+
+    private <S, T> T postRequest(String path, S data, Class<T> returnType) throws InfomediaConnectorException {
+        authenticate(); // Make sure we have a token
+        logger.log("POST {} with data {}", path, data);
+        final HttpPost httpPost = new HttpPost(failSafeHttpClient)
+                .withBaseUrl(baseUrl)
+                .withPathElements(path)
+                .withJsonData(data)
+                .withHeader("Accept", "application/json")
+                .withHeader("Content-type", "application/json")
+                .withHeader("Authorization", "bearer " + this.bearerToken);
+        final Response response = httpPost.execute();
+        assertResponseStatus(response, Response.Status.OK);
+        return readResponseEntity(response, returnType);
+    }
+
     private <T> T readResponseEntity(Response response, Class<T> type)
-            throws InfoMediaConnectorException {
+            throws InfomediaConnectorException {
         final T entity = response.readEntity(type);
         if (entity == null) {
-            throw new InfoMediaConnectorException(
+            throw new InfomediaConnectorException(
                     String.format("infomedia service returned with null-valued %s entity",
                             type.getName()));
         }
@@ -172,11 +212,11 @@ public class InfoMediaConnector {
     }
 
     private void assertResponseStatus(Response response, Response.Status expectedStatus)
-            throws InfoMediaConnectorUnexpectedStatusCodeException {
+            throws InfomediaConnectorUnexpectedStatusCodeException {
         final Response.Status actualStatus =
                 Response.Status.fromStatusCode(response.getStatus());
         if (actualStatus != expectedStatus) {
-            throw new InfoMediaConnectorUnexpectedStatusCodeException(
+            throw new InfomediaConnectorUnexpectedStatusCodeException(
                     String.format("infomedia service returned with unexpected status code: %s",
                             actualStatus),
                     actualStatus.getStatusCode());
