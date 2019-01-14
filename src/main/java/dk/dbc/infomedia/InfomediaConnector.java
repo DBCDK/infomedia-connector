@@ -18,9 +18,9 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class InfomediaConnector {
@@ -178,22 +178,35 @@ public class InfomediaConnector {
     }
 
 
-    // TODO Implement pagination
-    public List<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, String source) throws InfomediaConnectorException {
-        final List<String> result = new ArrayList<>();
-        ArticleSearchRequest body = new ArticleSearchRequest();
-        body.setIqlQuery(String.format("sourcecode:%s AND publishdate:%s", source, publishDate.toString()));
-        body.setSearchRange(new SearchRange(fromDate, toDate));
-        body.setPagingParameter(new PagingParameter(0, this.pageSize));
-        ArticleSearchResult reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
+    public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, String source) throws InfomediaConnectorException {
+        final Set<String> result = new HashSet<>();
+        int count = 0;
 
-        result.addAll(reply.getArticleIds());
-        logger.log("Found {} articles", result.size());
+        /*
+         * A thing to note about pagination: The order of the articles seems to be in random order in each request.
+         * The means each page will grab the items from different lists thus not resulting in a complete list.
+         * For now we just ignore that problem as a pagesize of 300 seems to be fine.
+         * It might be possible to sort the order to articles by using iql.
+         */
+        while (true) {
+            ArticleSearchRequest body = new ArticleSearchRequest();
+            body.setIqlQuery(String.format("sourcecode:%s AND publishdate:%s", source, publishDate.toString()));
+            body.setSearchRange(new SearchRange(fromDate, toDate));
+            body.setPagingParameter(new PagingParameter(count, this.pageSize));
+            ArticleSearchResult reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
+
+            count += this.pageSize;
+            result.addAll(reply.getArticleIds());
+
+            if (count >= reply.getNumFound()) {
+                break;
+            }
+        }
 
         return result;
     }
 
-    public ArticleList getArticles(List<String> articleIds) throws InfomediaConnectorException {
+    public ArticleList getArticles(Set<String> articleIds) throws InfomediaConnectorException {
         final String body = "[\"" + String.join("\",\"", articleIds) + "\"]";
 
         return postRequest(URL_INFOMEDIA_FETCH, body, ArticleList.class);
