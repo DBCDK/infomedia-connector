@@ -186,20 +186,16 @@ public class InfomediaConnector {
          * For now we just ignore that problem as a pagesize of 300 seems to be fine.
          * It might be possible to sort the order to articles by using iql.
          */
-        while (true) {
+        ArticleSearchResult reply;
+        do {
             final ArticleSearchRequest body = new ArticleSearchRequest();
             body.setIqlQuery(String.format("sourcecode:%s AND publishdate:%s", source, publishDate.toString()));
             body.setSearchRange(new SearchRange(fromDate, toDate));
             body.setPagingParameter(new PagingParameter(count, this.pageSize));
-            final ArticleSearchResult reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
-
+            reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
             count += this.pageSize;
             result.addAll(reply.getArticleIds());
-
-            if (count >= reply.getNumFound()) {
-                break;
-            }
-        }
+        } while (count < reply.getNumFound());
 
         return result;
     }
