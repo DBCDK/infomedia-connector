@@ -18,6 +18,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -175,21 +176,26 @@ public class InfomediaConnector {
         failSafeHttpClient.getClient().close();
     }
 
+    public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, String source)
+            throws InfomediaConnectorException {
+        return searchArticleIds(publishDate, fromDate, toDate, new HashSet<>(Arrays.asList(source)));
+    }
 
-    public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, String source) throws InfomediaConnectorException {
+    public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, Set<String> sources)
+            throws InfomediaConnectorException {
         final Set<String> result = new HashSet<>();
         int count = 0;
 
         /*
          * A thing to note about pagination: The order of the articles seems to be in random order in each request.
-         * The means each page will grab the items from different lists thus not resulting in a complete list.
+         * That means each page will grab the items from different lists thus not resulting in a complete list.
          * For now we just ignore that problem as a pagesize of 300 seems to be fine.
-         * It might be possible to sort the order to articles by using iql.
          */
         ArticleSearchResult reply;
         do {
             final ArticleSearchRequest body = new ArticleSearchRequest();
-            body.setIqlQuery(String.format("sourcecode:%s AND publishdate:%s", source, publishDate.toString()));
+            body.setIqlQuery(String.format("sourcecode:[%s] AND publishdate:%s",
+                    String.join(",", sources), publishDate.toString()));
             body.setSearchRange(new SearchRange(fromDate, toDate));
             body.setPagingParameter(new PagingParameter(count, this.pageSize));
             reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
