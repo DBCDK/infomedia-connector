@@ -152,7 +152,7 @@ public class InfomediaConnector {
 
                     final Response response = httpPost.execute();
                     assertResponseStatus(response, Response.Status.OK);
-                    AuthToken auth = readResponseEntity(response, AuthToken.class);
+                    final AuthToken auth = readResponseEntity(response, AuthToken.class);
 
                     updateAuthToken(auth);
                 } finally {
@@ -189,11 +189,11 @@ public class InfomediaConnector {
          * It might be possible to sort the order to articles by using iql.
          */
         while (true) {
-            ArticleSearchRequest body = new ArticleSearchRequest();
+            final ArticleSearchRequest body = new ArticleSearchRequest();
             body.setIqlQuery(String.format("sourcecode:%s AND publishdate:%s", source, publishDate.toString()));
             body.setSearchRange(new SearchRange(fromDate, toDate));
             body.setPagingParameter(new PagingParameter(count, this.pageSize));
-            ArticleSearchResult reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
+            final ArticleSearchResult reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
 
             count += this.pageSize;
             result.addAll(reply.getArticleIds());
