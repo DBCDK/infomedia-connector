@@ -6,7 +6,7 @@ public class InfomediaConnectorTestWireMockRecorder {
         Steps to reproduce wiremock recording:
 
         * Start standalone runner
-            java -jar wiremock-standalone-{WIRE_MOCK_VERSION}.jar --proxy-all="{RECORD_SERVICE_HOST}" --record-mappings --verbose
+            java -jar wiremock-standalone-{WIRE_MOCK_VERSION}.jar --proxy-all="{INFOMEDIA_BASE_URL}" --record-mappings --verbose
 
         * Run the main method of this class
 

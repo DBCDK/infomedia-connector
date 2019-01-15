@@ -24,16 +24,16 @@ import javax.ws.rs.client.Client;
 public class InfomediaConnectorFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(InfomediaConnectorFactory.class);
 
-    public static InfomediaConnector create(String recordServiceBaseUrl, String username, String password) {
+    public static InfomediaConnector create(String informediaBaseUrl, String username, String password) {
         final Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
-        LOGGER.info("Creating InfomediaConnector for: {}", recordServiceBaseUrl);
-        return new InfomediaConnector(client, recordServiceBaseUrl, username, password);
+        LOGGER.info("Creating InfomediaConnector for: {}", informediaBaseUrl);
+        return new InfomediaConnector(client, informediaBaseUrl, username, password);
     }
 
-    public static InfomediaConnector create(String recordServiceBaseUrl, TimingLogLevel level, String username, String password) {
+    public static InfomediaConnector create(String informediaBaseUrl, TimingLogLevel level, String username, String password) {
         final Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
-        LOGGER.info("Creating InfomediaConnector for: {}", recordServiceBaseUrl);
-        return new InfomediaConnector(client, recordServiceBaseUrl, level, username, password);
+        LOGGER.info("Creating InfomediaConnector for: {}", informediaBaseUrl);
+        return new InfomediaConnector(client, informediaBaseUrl, level, username, password);
     }
 
     @Inject
