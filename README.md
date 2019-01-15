@@ -23,13 +23,13 @@ You must have the following environment variables in your deployment:
 
 To get all articles since midnight for Politiken:
 
-            Instant today = Instant.now().truncatedTo(ChronoUnit.DAYS);
-            Set<String> ids = connector.searchArticleIds(today, today, today, "pol");
-            ArticleList articles =  connector.getArticles(ids); 
+    Instant today = Instant.now().truncatedTo(ChronoUnit.DAYS);
+    Set<String> ids = connector.searchArticleIds(today, today, today, "pol");
+    ArticleList articles =  connector.getArticles(ids); 
 
 
 #### Caution! 
-Pagination doesn't work properly as the order to articles is random.
+Pagination doesn't work properly as the order of articles is random.
 
 As long as you are getting articles for one newspaper for one day then it should work just fine. However if you perform a search which has more than 300 hits then you might be missing some result.
 
