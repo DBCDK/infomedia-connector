@@ -184,7 +184,7 @@ public class InfomediaConnector {
      * @param toDate The lastest date the article was added to Infomedia
      * @param source Name of article source (e.g. newspapers)
      * @return A list of article ids
-     * @throws InfomediaConnectorException
+     * @throws InfomediaConnectorException On failure to read result entity from response
      */
     public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, String source)
             throws InfomediaConnectorException {
@@ -199,7 +199,7 @@ public class InfomediaConnector {
      * @param toDate The lastest date the article was added to Infomedia
      * @param sources Name of article sources (e.g. newspapers)
      * @return A list of article ids
-     * @throws InfomediaConnectorException
+     * @throws InfomediaConnectorException On failure to read result entity from response
      */
     public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, Set<String> sources)
             throws InfomediaConnectorException {
@@ -230,7 +230,7 @@ public class InfomediaConnector {
      *  This function is used for getting full article data from Informedia
      * @param articleIds The list of article ids
      * @return List of articles with full data from Infomedia
-     * @throws InfomediaConnectorException
+     * @throws InfomediaConnectorException On failure to read result entity from response
      */
     public ArticleList getArticles(Set<String> articleIds) throws InfomediaConnectorException {
         final String body = "[\"" + String.join("\",\"", articleIds) + "\"]";
