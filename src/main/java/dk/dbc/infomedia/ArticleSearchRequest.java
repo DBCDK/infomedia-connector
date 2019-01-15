@@ -18,11 +18,6 @@ public class ArticleSearchRequest {
     @JsonProperty("SearchRange")
     private SearchRange searchRange;
 
-    // We need to explicitly define a default constructor because we have defined a non-default constructur
-    public ArticleSearchRequest() {
-
-    }
-
     public String getIqlQuery() {
         return iqlQuery;
     }
