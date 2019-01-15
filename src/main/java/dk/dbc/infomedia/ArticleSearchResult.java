@@ -66,4 +66,13 @@ public class ArticleSearchResult {
         return res;
     }
 
+    @Override
+    public String toString() {
+        return "ArticleSearchResult{" +
+                "articles=" + articles +
+                ", numFound=" + numFound +
+                ", pagingInfo='" + pagingInfo + '\'' +
+                ", articleUsage=" + articleUsage +
+                '}';
+    }
 }
