@@ -2,7 +2,7 @@
 
 JAR library for retrieving article data from Infomedia.
 
-###Usage
+### Usage
 
 In pom.xml add this dependency:
 
@@ -28,7 +28,7 @@ To get all articles since midnight for Politiken:
             ArticleList articles =  connector.getArticles(ids); 
 
 
-####Caution! 
+#### Caution! 
 Pagination doesn't work properly as the order to articles is random.
 
 As long as you are getting articles for one newspaper for one day then it should work just fine. However if you perform a search which has more than 300 hits then you might be missing some result.
