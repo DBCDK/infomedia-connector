@@ -1,0 +1,24 @@
+{
+  "id" : "d11d19c6-6f9c-3452-925f-59cb411f9095",
+  "request" : {
+    "url" : "/oauth/token",
+    "method" : "POST",
+    "bodyPatterns" : [ {
+      "equalTo" : "grant_type=password&username=username&password=password"
+    } ]
+  },
+  "response" : {
+    "status" : 200,
+    "bodyFileName" : "body-oauth-token-H7SpN.json",
+    "headers" : {
+      "Cache-Control" : "no-cache",
+      "Pragma" : "no-cache",
+      "Content-Type" : "application/json;charset=UTF-8",
+      "Expires" : "-1",
+      "Server" : "Microsoft-IIS/10.0",
+      "X-Powered-By" : "ASP.NET",
+      "Date" : "Mon, 14 Jan 2019 13:41:29 GMT"
+    }
+  },
+  "uuid" : "d11d19c6-6f9c-3452-925f-59cb411f9095"
+}

@@ -1,0 +1,52 @@
+{
+  "NumFound": 113,
+  "PagingInfo": null,
+  "Articles": [
+    {
+      "ArticleUrl": "https://mediaresearchapi.infomedia.dk/api/v1/article?id=e70a7343",
+      "Heading": "Pol Heading 1",
+      "SubHeading": "",
+      "Lead": "",
+      "Paragraph": "Pol Paragraph 1",
+      "PublishDate": "2019-01-13T00:00:00Z",
+      "BodyText": "Pol BodyText 1",
+      "Captions": [],
+      "Authors": [],
+      "Source": "Politiken",
+      "WordCount": 46,
+      "ArticleId": "e70a7343",
+      "PageIds": [
+        "7"
+      ],
+      "Section": {
+        "Name": "",
+        "Id": "1"
+      }
+    },
+    {
+      "ArticleUrl": "https://mediaresearchapi.infomedia.dk/api/v1/article?id=e70a7334",
+      "Heading": "Pol Heading 2",
+      "SubHeading": "",
+      "Lead": "",
+      "Paragraph": "Pol Paragraph 2",
+      "PublishDate": "2019-01-13T00:00:00Z",
+      "BodyText": "Pol BodyText 2",
+      "Captions": [],
+      "Authors": [],
+      "Source": "Politiken",
+      "WordCount": 2,
+      "ArticleId": "e70a7334",
+      "PageIds": [
+        "1"
+      ],
+      "Section": {
+        "Name": "",
+        "Id": "1"
+      }
+    }
+  ],
+  "ArticleUsage": {
+    "ArticleUsageCount": 2,
+    "ArticleUsageType": 0
+  }
+}

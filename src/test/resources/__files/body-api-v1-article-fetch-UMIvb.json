@@ -1,0 +1,52 @@
+{
+  "Articles": [
+    {
+      "ArticleUrl": "https://mediaresearchapi.infomedia.dk/api/v1/article?id=e70a740d",
+      "Heading": "Ber Heading 1 Full",
+      "SubHeading": "",
+      "Lead": "Ber Lead 1 Full",
+      "Paragraph": "Ber Paragraph 1 Full",
+      "PublishDate": "2019-01-13T00:00:00Z",
+      "BodyText": "Ber BodyText 1 Full",
+      "Captions": [],
+      "Authors": [],
+      "Source": "Berlingske",
+      "WordCount": 85,
+      "ArticleId": "e70a740d",
+      "PageIds": [
+        "19"
+      ],
+      "Section": {
+        "Name": "",
+        "Id": "1"
+      }
+    },
+    {
+      "ArticleUrl": "https://mediaresearchapi.infomedia.dk/api/v1/article?id=e70a695c",
+      "Heading": "Pol Heading 3 Full",
+      "SubHeading": "Pol SubHeading 3 Full",
+      "Lead": "",
+      "Paragraph": "Pol Paragraph 3 Full",
+      "PublishDate": "2019-01-13T00:00:00Z",
+      "BodyText": "Pol BodyText 3 Full",
+      "Captions": [],
+      "Authors": [
+        ",Sune Højrup Bencke"
+      ],
+      "Source": "Politiken",
+      "WordCount": 872,
+      "ArticleId": "e70a695c",
+      "PageIds": [
+        "10"
+      ],
+      "Section": {
+        "Name": "Rejser",
+        "Id": "5"
+      }
+    }
+  ],
+  "ArticleUsage": {
+    "ArticleUsageCount": 195,
+    "ArticleUsageType": 100
+  }
+}
