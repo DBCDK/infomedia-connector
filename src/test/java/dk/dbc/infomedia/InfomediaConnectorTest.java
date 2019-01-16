@@ -15,11 +15,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Client;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,13 +32,7 @@ public class InfomediaConnectorTest {
             .register(new JacksonFeature()));
     static InfomediaConnector connector;
 
-    final static DateTimeFormatter FMT = new DateTimeFormatterBuilder()
-            .appendPattern("yyyy-MM-dd")
-            .parseDefaulting(ChronoField.NANO_OF_DAY, 0)
-            .toFormatter()
-            .withZone(ZoneId.of("Europe/Copenhagen"));
-
-    private final static Instant theDate = FMT.parse("2019-01-14", Instant::from).truncatedTo(ChronoUnit.DAYS);
+    private final static Instant theDate = Instant.parse("2019-01-13T00:00:00Z");
 
     @BeforeAll
     static void startWireMockServer() {
