@@ -18,6 +18,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -233,6 +234,15 @@ public class InfomediaConnector {
      * @throws InfomediaConnectorException On failure to read result entity from response
      */
     public ArticleList getArticles(Set<String> articleIds) throws InfomediaConnectorException {
+        // Infomedia returns a different DTO when request is an empty list. To avoid that situation we simple return an
+        // empty list if the articleIds is empty
+        if (articleIds == null || articleIds.size() == 0) {
+            ArticleList result = new ArticleList();
+            result.setArticles(new ArrayList<>());
+
+            return result;
+        }
+
         final String body = "[\"" + String.join("\",\"", articleIds) + "\"]";
 
         return postRequest(URL_INFOMEDIA_FETCH, body, ArticleList.class);

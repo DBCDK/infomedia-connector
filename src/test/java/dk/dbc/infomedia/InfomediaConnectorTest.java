@@ -54,11 +54,6 @@ public class InfomediaConnectorTest {
     }
 
     @Test
-    void dummy() throws InfomediaConnectorException {
-        assertThat(true, is(true));
-    }
-
-    @Test
     public void callSearchArticlesNothingFound() throws InfomediaConnectorException {
         Set<String> articleIds = connector.searchArticleIds(theDate, theDate, theDate, "notfound");
         assertThat(articleIds.size(), is(0));
@@ -155,6 +150,12 @@ public class InfomediaConnectorTest {
         assertThat(articleActual2.getSource(), is("Politiken"));
         assertThat(articleActual2.getSubHeading(), is("Pol SubHeading 3 Full"));
         assertThat(articleActual2.getWordCount(), is(872));
+    }
+
+    @Test
+    public void callGetArticlesEmptyList() throws InfomediaConnectorException{
+        assertThat(connector.getArticles(new HashSet<>()).getArticles().size(), is(0));
+        assertThat(connector.getArticles(null).getArticles().size(), is(0));
     }
 
 }
