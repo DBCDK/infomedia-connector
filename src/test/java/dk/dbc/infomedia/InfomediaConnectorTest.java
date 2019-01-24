@@ -157,4 +157,10 @@ public class InfomediaConnectorTest {
         assertThat(articleActual2.getWordCount(), is(872));
     }
 
+    @Test
+    public void callGetArticlesEmptyList() throws InfomediaConnectorException{
+        assertThat(connector.getArticles(new HashSet<>()).getArticles().size(), is(0));
+        assertThat(connector.getArticles(null).getArticles().size(), is(0));
+    }
+
 }
