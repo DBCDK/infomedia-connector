@@ -6,6 +6,8 @@
 package dk.dbc.infomedia;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 
 import java.util.List;
 
@@ -21,15 +23,21 @@ public class Article {
     private String bodyText;
 
     @JsonProperty("PageIds")
+    @JacksonXmlProperty(localName = "PageId")
+    @JacksonXmlElementWrapper(localName = "PageIds")
     private List<String> pageIds;
 
     @JsonProperty("PublishDate")
     private String publishDate;
 
     @JsonProperty("Authors")
+    @JacksonXmlProperty(localName = "Author")
+    @JacksonXmlElementWrapper(localName = "Authors")
     private List<String> authors;
 
     @JsonProperty("Captions")
+    @JacksonXmlProperty(localName = "Caption")
+    @JacksonXmlElementWrapper(localName = "Captions")
     private List<String> captions;
 
     @JsonProperty("ArticleUrl")
