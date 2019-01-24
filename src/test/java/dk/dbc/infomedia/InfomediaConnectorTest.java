@@ -54,11 +54,6 @@ public class InfomediaConnectorTest {
     }
 
     @Test
-    void dummy() throws InfomediaConnectorException {
-        assertThat(true, is(true));
-    }
-
-    @Test
     public void callSearchArticlesNothingFound() throws InfomediaConnectorException {
         Set<String> articleIds = connector.searchArticleIds(theDate, theDate, theDate, "notfound");
         assertThat(articleIds.size(), is(0));
