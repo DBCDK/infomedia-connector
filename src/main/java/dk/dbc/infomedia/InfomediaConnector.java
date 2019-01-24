@@ -236,7 +236,7 @@ public class InfomediaConnector {
     public ArticleList getArticles(Set<String> articleIds) throws InfomediaConnectorException {
         // Infomedia returns a different DTO when request is an empty list. To avoid that situation we simple return an
         // empty list if the articleIds is empty
-        if (articleIds.size() == 0) {
+        if (articleIds == null || articleIds.size() == 0) {
             ArticleList result = new ArticleList();
             result.setArticles(new ArrayList<>());
 
