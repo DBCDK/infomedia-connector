@@ -17,10 +17,10 @@ import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -35,10 +35,11 @@ public class InfomediaConnector {
     private static final String URL_OAUTH_TOKEN = "/oauth/token";
     private static final String URL_INFOMEDIA_SEARCH = "/api/v1/article/search";
     private static final String URL_INFOMEDIA_FETCH = "/api/v1/article/fetch";
-    private static final RetryPolicy RETRY_POLICY = new RetryPolicy()
-            .retryOn(Collections.singletonList(ProcessingException.class))
-            .retryIf((Response response) -> response.getStatus() == 404 || response.getStatus() == 502)
-            .withDelay(10, TimeUnit.SECONDS)
+    private static final RetryPolicy<Response> RETRY_POLICY = new RetryPolicy<Response>()
+            .handle(ProcessingException.class)
+            .handleResultIf(response -> response.getStatus() == 404
+                    || response.getStatus() == 502)
+            .withDelay(Duration.ofSeconds(10))
             .withMaxRetries(6);
 
     private final FailSafeHttpClient failSafeHttpClient;
@@ -178,12 +179,12 @@ public class InfomediaConnector {
     }
 
     /**
-     *  This function is used for finding articles for a single source
+     * This function is used for finding articles for a single source
      *
      * @param publishDate The date the article was published
-     * @param fromDate The earliest date the article was added to Infomedia
-     * @param toDate The lastest date the article was added to Infomedia
-     * @param source Name of article source (e.g. newspapers)
+     * @param fromDate    The earliest date the article was added to Infomedia
+     * @param toDate      The lastest date the article was added to Infomedia
+     * @param source      Name of article source (e.g. newspapers)
      * @return A list of article ids
      * @throws InfomediaConnectorException On failure to read result entity from response
      */
@@ -193,12 +194,12 @@ public class InfomediaConnector {
     }
 
     /**
-     *  This function is used for finding articles for sources
+     * This function is used for finding articles for sources
      *
      * @param publishDate The date the article was published
-     * @param fromDate The earliest date the article was added to Infomedia
-     * @param toDate The lastest date the article was added to Infomedia
-     * @param sources Name of article sources (e.g. newspapers)
+     * @param fromDate    The earliest date the article was added to Infomedia
+     * @param toDate      The lastest date the article was added to Infomedia
+     * @param sources     Name of article sources (e.g. newspapers)
      * @return A list of article ids
      * @throws InfomediaConnectorException On failure to read result entity from response
      */
@@ -228,7 +229,8 @@ public class InfomediaConnector {
     }
 
     /**
-     *  This function is used for getting full article data from Informedia
+     * This function is used for getting full article data from Informedia
+     *
      * @param articleIds The list of article ids
      * @return List of articles with full data from Infomedia
      * @throws InfomediaConnectorException On failure to read result entity from response
