@@ -25,6 +25,7 @@ public class InfomediaConnectorTestWireMockRecorder {
         connectorTest.callSearchArticlesNothingFound();
         connectorTest.callSearchArticlesSingleNewsPaper();
         connectorTest.callSearchArticlesDualNewsPaper();
+        connectorTest.callSearchArticlesOnlinePublication();
     }
     
 }

@@ -1,0 +1,56 @@
+{
+  "NumFound": 2,
+  "PagingInfo": null,
+  "Articles": [
+    {
+      "ArticleUrl": "https://mediaresearchapi.infomedia.dk/api/v1/article?id=e70a806a",
+      "Heading": "Videnskab.dk Heading 1",
+      "SubHeading": "",
+      "Lead": "",
+      "Paragraph": "Videnskab.dk Paragraph 1",
+      "PublishDate": "2019-01-13T00:00:00Z",
+      "BodyText": "Videnskab.dk BodyText 1",
+      "Captions": [],
+      "Authors": [
+        ""
+      ],
+      "Source": "Videnskab.dk",
+      "WordCount": 771,
+      "ArticleId": "e70a806a",
+      "PageIds": [
+        ""
+      ],
+      "Section": {
+        "Name": "",
+        "Id": ""
+      }
+    },
+    {
+      "ArticleUrl": "https://mediaresearchapi.infomedia.dk/api/v1/article?id=e70a8818",
+      "Heading": "Videnskab dk heading 2",
+      "SubHeading": "",
+      "Lead": "",
+      "Paragraph": "Videnskab.dk Paragraph 2",
+      "PublishDate": "2019-01-13T00:00:00Z",
+      "BodyText": "Videnskab.dk BodyText 2",
+      "Captions": [],
+      "Authors": [
+        ""
+      ],
+      "Source": "Videnskab.dk",
+      "WordCount": 1208,
+      "ArticleId": "e70a8818",
+      "PageIds": [
+        ""
+      ],
+      "Section": {
+        "Name": "",
+        "Id": ""
+      }
+    }
+  ],
+  "ArticleUsage": {
+    "ArticleUsageCount": 2,
+    "ArticleUsageType": 0
+  }
+}

@@ -20,7 +20,7 @@ import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -181,29 +181,27 @@ public class InfomediaConnector {
     /**
      * This function is used for finding articles for a single source
      *
-     * @param publishDate The date the article was published
-     * @param fromDate    The earliest date the article was added to Infomedia
-     * @param toDate      The lastest date the article was added to Infomedia
-     * @param source      Name of article source (e.g. newspapers)
+     * @param publishDate     The date the article was published
+     * @param publishDuration The amount of time since publishDate to look for articles
+     * @param source          Name of article source (e.g. newspapers)
      * @return A list of article ids
      * @throws InfomediaConnectorException On failure to read result entity from response
      */
-    public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, String source)
+    public Set<String> searchArticleIdsByPublishDate(Instant publishDate, Duration publishDuration, String source)
             throws InfomediaConnectorException {
-        return searchArticleIds(publishDate, fromDate, toDate, new HashSet<>(Arrays.asList(source)));
+        return searchArticleIdsByPublishDate(publishDate, publishDuration, new HashSet<>(Collections.singletonList(source)));
     }
 
     /**
-     * This function is used for finding articles for sources
+     * This function is used for finding articles for sources limited by an interval
      *
-     * @param publishDate The date the article was published
-     * @param fromDate    The earliest date the article was added to Infomedia
-     * @param toDate      The lastest date the article was added to Infomedia
-     * @param sources     Name of article sources (e.g. newspapers)
+     * @param publishDate     The date the article was published
+     * @param publishDuration The amount of time since publishDate to look for articles
+     * @param sources         Name of article sources (e.g. newspapers)
      * @return A list of article ids
      * @throws InfomediaConnectorException On failure to read result entity from response
      */
-    public Set<String> searchArticleIds(Instant publishDate, Instant fromDate, Instant toDate, Set<String> sources)
+    public Set<String> searchArticleIdsByPublishDate(Instant publishDate, Duration publishDuration, Set<String> sources)
             throws InfomediaConnectorException {
         final Set<String> result = new HashSet<>();
         int count = 0;
@@ -216,9 +214,9 @@ public class InfomediaConnector {
         ArticleSearchResult reply;
         do {
             final ArticleSearchRequest body = new ArticleSearchRequest();
-            body.setIqlQuery(String.format("sourcecode:[%s] AND publishdate:%s",
-                    String.join(",", sources), publishDate.toString()));
-            body.setSearchRange(new SearchRange(fromDate, toDate));
+            body.setIqlQuery(String.format("sourcecode:[%s] AND publishdate:[%s..%s]",
+                    String.join(",", sources), publishDate.toString(), publishDate.plus(publishDuration).toString()));
+            body.setSearchRange(new SearchRange(publishDate, publishDate.plus(publishDuration)));
             body.setPagingParameter(new PagingParameter(count, this.pageSize));
             reply = postRequest(URL_INFOMEDIA_SEARCH, body, ArticleSearchResult.class);
             count += this.pageSize;

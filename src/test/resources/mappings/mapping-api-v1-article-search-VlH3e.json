@@ -1,17 +1,17 @@
 {
-  "id" : "c9e7c19c-7c97-346e-ad3d-d9a5aa3676bc",
+  "id" : "dc024ca9-2718-3ec1-ab91-9ff869cf6f8c",
   "request" : {
     "url" : "/api/v1/article/search",
     "method" : "POST",
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"IqlQuery\":\"sourcecode:[pol] AND publishdate:[2019-01-13T00:00:00Z..2019-01-13T23:59:59Z]\",\"PagingParameter\":{\"StartIndex\":0,\"Pagesize\":300},\"SearchRange\":{\"SearchFrom\":\"2019-01-13T00:00:00Z\",\"SearchTo\":\"2019-01-13T23:59:59Z\"}}",
+      "equalToJson" : "{\"IqlQuery\":\"sourcecode:[4f1] AND publishdate:[2019-01-13T00:00:00Z..2019-01-13T23:59:59Z]\",\"PagingParameter\":{\"StartIndex\":0,\"Pagesize\":300},\"SearchRange\":{\"SearchFrom\":\"2019-01-13T00:00:00Z\",\"SearchTo\":\"2019-01-13T23:59:59Z\"}}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
   },
   "response" : {
     "status" : 200,
-    "bodyFileName" : "body-api-v1-article-search-uofET.json",
+    "bodyFileName" : "body-api-v1-article-search-VlH3e.json",
     "headers" : {
       "Cache-Control" : "no-cache",
       "Pragma" : "no-cache",
@@ -20,8 +20,8 @@
       "Server" : "Microsoft-IIS/10.0",
       "X-AspNet-Version" : "4.0.30319",
       "X-Powered-By" : "ASP.NET",
-      "Date" : "Mon, 14 Jan 2019 13:41:29 GMT"
+      "Date" : "Fri, 23 Apr 2021 09:55:15 GMT"
     }
   },
-  "uuid" : "c9e7c19c-7c97-346e-ad3d-d9a5aa3676bc"
+  "uuid" : "dc024ca9-2718-3ec1-ab91-9ff869cf6f8c"
 }

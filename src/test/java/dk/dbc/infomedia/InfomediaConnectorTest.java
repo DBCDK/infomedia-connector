@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.Client;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -24,9 +25,10 @@ import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class InfomediaConnectorTest {
+class InfomediaConnectorTest {
     private static WireMockServer wireMockServer;
     private static String wireMockHost;
+    private static Duration oneDay = Duration.ofHours(23).plusMinutes(59).plusSeconds(59);
 
     final static Client CLIENT = HttpClient.newClient(new ClientConfig()
             .register(new JacksonFeature()));
@@ -54,14 +56,14 @@ public class InfomediaConnectorTest {
     }
 
     @Test
-    public void callSearchArticlesNothingFound() throws InfomediaConnectorException {
-        Set<String> articleIds = connector.searchArticleIds(theDate, theDate, theDate, "notfound");
+    void callSearchArticlesNothingFound() throws InfomediaConnectorException {
+        Set<String> articleIds = connector.searchArticleIdsByPublishDate(theDate, oneDay, "notfound");
         assertThat(articleIds.size(), is(0));
     }
 
     @Test
-    public void callSearchArticlesSingleNewsPaper() throws InfomediaConnectorException {
-        Set<String> articleIds = connector.searchArticleIds(theDate, theDate, theDate, "pol");
+    void callSearchArticlesSingleNewsPaper() throws InfomediaConnectorException {
+        Set<String> articleIds = connector.searchArticleIdsByPublishDate(theDate, oneDay, "pol");
         assertThat(articleIds.size(), is(2));
         assertThat(articleIds.contains("e70a7343"), is(true));
         assertThat(articleIds.contains("e70a7334"), is(true));
@@ -105,11 +107,11 @@ public class InfomediaConnectorTest {
     }
 
     @Test
-    public void callSearchArticlesDualNewsPaper() throws InfomediaConnectorException {
+    void callSearchArticlesDualNewsPaper() throws InfomediaConnectorException {
         Set<String> sources = new HashSet<>();
         sources.add("pol");
         sources.add("bma");
-        Set<String> articleIds = connector.searchArticleIds(theDate, theDate, theDate, sources);
+        Set<String> articleIds = connector.searchArticleIdsByPublishDate(theDate, oneDay, sources);
         assertThat(articleIds.size(), is(2));
         assertThat(articleIds.contains("e70a740d"), is(true));
         assertThat(articleIds.contains("e70a695c"), is(true));
@@ -153,7 +155,17 @@ public class InfomediaConnectorTest {
     }
 
     @Test
-    public void callGetArticlesEmptyList() throws InfomediaConnectorException{
+    void callSearchArticlesOnlinePublication() throws InfomediaConnectorException {
+        Set<String> sources = new HashSet<>();
+        sources.add("4f1");
+        Set<String> articleIds = connector.searchArticleIdsByPublishDate(theDate, oneDay, sources);
+        assertThat(articleIds.size(), is(2));
+        assertThat(articleIds.contains("e70a806a"), is(true));
+        assertThat(articleIds.contains("e70a8818"), is(true));
+    }
+
+    @Test
+    void callGetArticlesEmptyList() throws InfomediaConnectorException {
         assertThat(connector.getArticles(new HashSet<>()).getArticles().size(), is(0));
         assertThat(connector.getArticles(null).getArticles().size(), is(0));
     }
