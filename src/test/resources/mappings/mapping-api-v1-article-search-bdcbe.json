@@ -4,7 +4,7 @@
     "url" : "/api/v1/article/search",
     "method" : "POST",
     "bodyPatterns" : [ {
-      "equalToJson" : "{\"IqlQuery\":\"sourcecode:[notfound] AND publishdate:2019-01-13T00:00:00Z\",\"PagingParameter\":{\"StartIndex\":0,\"Pagesize\":300},\"SearchRange\":{\"SearchFrom\":\"2019-01-13T00:00:00Z\",\"SearchTo\":\"2019-01-13T00:00:00Z\"}}",
+      "equalToJson" : "{\"IqlQuery\":\"sourcecode:[notfound] AND publishdate:[2019-01-13T00:00:00Z..2019-01-13T23:59:59Z]\",\"PagingParameter\":{\"StartIndex\":0,\"Pagesize\":300},\"SearchRange\":{\"SearchFrom\":\"2019-01-13T00:00:00Z\",\"SearchTo\":\"2019-01-13T23:59:59Z\"}}",
       "ignoreArrayOrder" : true,
       "ignoreExtraElements" : true
     } ]
