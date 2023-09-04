@@ -7,33 +7,32 @@ package dk.dbc.infomedia;
 
 import dk.dbc.httpclient.HttpClient;
 import dk.dbc.infomedia.InfomediaConnector.TimingLogLevel;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
+import jakarta.ws.rs.client.Client;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.inject.Produces;
-import javax.inject.Inject;
-import javax.ws.rs.client.Client;
-
 @ApplicationScoped
 public class InfomediaConnectorFactory {
     private static final Logger LOGGER = LoggerFactory.getLogger(InfomediaConnectorFactory.class);
 
-    public static InfomediaConnector create(String informediaBaseUrl, String username, String password) {
+    public static InfomediaConnector create(String infomediaBaseUrl, String username, String password) {
         final Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
-        LOGGER.info("Creating InfomediaConnector for: {}", informediaBaseUrl);
-        return new InfomediaConnector(client, informediaBaseUrl, username, password);
+        LOGGER.info("Creating InfomediaConnector for: {}", infomediaBaseUrl);
+        return new InfomediaConnector(client, infomediaBaseUrl, username, password);
     }
 
-    public static InfomediaConnector create(String informediaBaseUrl, TimingLogLevel level, String username, String password) {
+    public static InfomediaConnector create(String infomediaBaseUrl, TimingLogLevel level, String username, String password) {
         final Client client = HttpClient.newClient(new ClientConfig().register(new JacksonFeature()));
-        LOGGER.info("Creating InfomediaConnector for: {}", informediaBaseUrl);
-        return new InfomediaConnector(client, informediaBaseUrl, level, username, password);
+        LOGGER.info("Creating InfomediaConnector for: {}", infomediaBaseUrl);
+        return new InfomediaConnector(client, infomediaBaseUrl, level, username, password);
     }
 
     @Inject

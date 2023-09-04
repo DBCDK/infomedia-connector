@@ -9,14 +9,14 @@ import dk.dbc.httpclient.FailSafeHttpClient;
 import dk.dbc.httpclient.HttpPost;
 import dk.dbc.invariant.InvariantUtil;
 import dk.dbc.util.Stopwatch;
+import jakarta.ws.rs.ProcessingException;
+import jakarta.ws.rs.client.Client;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import net.jodah.failsafe.RetryPolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.ws.rs.ProcessingException;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -236,7 +236,7 @@ public class InfomediaConnector {
     public ArticleList getArticles(Set<String> articleIds) throws InfomediaConnectorException {
         // Infomedia returns a different DTO when request is an empty list. To avoid that situation we simple return an
         // empty list if the articleIds is empty
-        if (articleIds == null || articleIds.size() == 0) {
+        if (articleIds == null || articleIds.isEmpty()) {
             ArticleList result = new ArticleList();
             result.setArticles(new ArrayList<>());
 
