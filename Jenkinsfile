@@ -1,6 +1,5 @@
 #!groovy
-
-def workerNode = "devel8"
+def workerNode = "devel11"
 
 pipeline {
     agent {label workerNode}
@@ -9,6 +8,10 @@ pipeline {
     }
     options {
         timestamps()
+    }
+    tools {
+        jdk 'jdk11'
+        maven 'Maven 3'
     }
     stages {
         stage("clear workspace") {
@@ -50,9 +53,7 @@ pipeline {
                 branch "master"
             }
             steps {
-                withMaven(maven: 'Maven 3') {
-                    sh "mvn jar:jar deploy:deploy"
-                }
+                sh "mvn jar:jar deploy:deploy"
             }
         }
     }
